@@ -1,6 +1,6 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f9f9fb;
+  background: #f4f6f8;
   color: #333;
   display: flex;
   justify-content: center;
@@ -15,11 +15,11 @@ body {
   padding: 30px 25px;
   border-radius: 16px;
   width: 100%;
-  max-width: 520px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
 }
 
 /* Header */
@@ -33,79 +33,72 @@ body {
 
 h1 {
   margin: 0;
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   color: #222;
-}
-
-.hpt-box {
-  background: #eaf6ed;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-weight: bold;
-  color: #2e7d32;
-  font-size: 14px;
 }
 
 /* Sections */
 .main-section {
   display: flex;
   gap: 20px;
-  flex-wrap: wrap; /* allows stacking on small screens */
+  flex-wrap: wrap;
 }
 
 .left-column, .right-column {
   flex: 1;
-  padding: 16px;
-  border-radius: 12px;
-  background: #fdfdfd;
-  border: 1px solid #eee;
+  padding: 20px;
+  border-radius: 14px;
+  background: #fafafa;
+  border: 1px solid #e3e3e3;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
 }
 
 .left-column {
-  opacity: 0.85; /* slightly less focus */
+  opacity: 0.9;
 }
 
 .right-column {
-  flex: 1.4; /* more focus */
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  flex: 1.5;
+  background: #eaf0ff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
 }
 
 /* Headings */
 h2, h3 {
   font-size: 16px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: #444;
   font-weight: 600;
 }
 
-/* Input area */
+/* Input section */
 .input-section {
   display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
+  gap: 8px;
+  margin-bottom: 15px;
 }
 
 input, select {
   flex: 1;
-  padding: 8px 10px;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 14px;
   background: #fff;
-  transition: border 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 input:focus, select:focus {
   outline: none;
   border-color: #4caf50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
 }
 
 button {
   padding: 8px 14px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   background: #4caf50;
   color: #fff;
   cursor: pointer;
@@ -115,20 +108,21 @@ button {
 
 button:hover {
   background: #43a047;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 /* Toggle button */
 .toggle-show {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 12px;
   background: #f0f0f0;
   color: #333;
   border: 1px solid #ccc;
+  border-radius: 8px;
 }
 
-/* Task list */
+/* Task List */
 ul {
   list-style: none;
   padding: 0;
@@ -138,12 +132,18 @@ ul {
 li {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: #fafafa;
-  border: 1px solid #eee;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #e3e3e3;
   transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+li:hover {
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
 }
 
 li.completed {
@@ -203,139 +203,56 @@ li.completed {
   transform: scale(1.1);
 }
 
-/* Score label */
+/* Score display */
 .score {
   text-align: right;
-  font-weight: bold;
+  font-weight: 600;
   color: #2e7d32;
-  margin-top: 6px;
+  margin-bottom: 10px;
   font-size: 14px;
 }
 
-/* 📱 Responsiveness */
+/* Pending tasks */
+.pending-tasks {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.pending-tasks h3 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Focus banner */
+.focus-banner {
+  padding: 20px;
+  border-radius: 12px;
+  background: #d0e0ff;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+/* Responsive tweaks */
 @media (max-width: 768px) {
-  body {
-    padding: 30px 15px;
-  }
-  .main-section {
-    flex-direction: column; /* stack columns */
-  }
-  .container {
-    padding: 20px;
-  }
-  h1 {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  body {
-    padding: 20px 10px;
-  }
-  .container {
-    padding: 16px;
-    border-radius: 12px;
-  }
-  h1 {
-    font-size: 18px;
-  }
-  h2, h3 {
-    font-size: 14px;
-  }
-  button {
-    font-size: 13px;
-    padding: 6px 10px;
-  }
-}
-
-/* Ensure mobile-friendly tap targets */
-button, input, select {
-  min-height: 44px; /* recommended for touch */
-}
-
-/* Handle extra-small phones (≤360px wide) */
-@media (max-width: 360px) {
-  body {
-    padding: 15px 8px;
-  }
-  .container {
-    padding: 12px;
-    border-radius: 10px;
-  }
-  h1 {
-    font-size: 16px;
-  }
-  h2, h3 {
-    font-size: 13px;
-  }
-  input, select {
-    font-size: 13px;
-    padding: 6px 8px;
-  }
-  button {
-    font-size: 12px;
-    padding: 6px 8px;
-  }
-  li {
-    font-size: 13px;
-    padding: 6px 8px;
-  }
-}
-
-/* Handle larger phones (≤600px wide) */
-@media (max-width: 600px) {
   .main-section {
     flex-direction: column;
     gap: 16px;
   }
-  .left-column, .right-column {
-    padding: 12px;
-  }
-}
-
-/* Prevent text overflow on small screens */
-* {
-  word-break: break-word;
-}
-/* 📱 Responsiveness */
-@media (max-width: 768px) {
-  body {
-    padding: 20px 10px; /* reduced padding */
-  }
-  .main-section {
-    flex-direction: column; /* stack columns */
-  }
-  .container {
-    padding: 16px;
-    border-radius: 14px;
-  }
-  h1 {
-    font-size: 20px;
-  }
 }
 
 @media (max-width: 480px) {
-  body {
-    padding: 0; /* 🚨 removed body padding */
-  }
   .container {
-    padding: 12px;  /* minimal padding inside */
-    border-radius: 10px;
-    box-shadow: none; /* optional: flatter on small screens */
-    width: 100%; 
-    max-width: none; 
+    padding: 16px;
+    width: 100%;
   }
-  h1 {
-    font-size: 18px;
-  }
-  h2, h3 {
-    font-size: 14px;
-  }
-  button {
-    font-size: 13px;
-    padding: 6px 10px;
-  }
-  li {
-    padding: 6px 8px; /* tighter task list */
-  }
+  h1 { font-size: 20px; }
+  h2, h3 { font-size: 14px; }
+  input, select, button { font-size: 13px; }
+  li { font-size: 13px; padding: 8px 10px; }
 }
