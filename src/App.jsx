@@ -4,16 +4,20 @@ import "./style.css";
 export default function App() {
   const [mainTasks, setMainTasks] = useState(() => JSON.parse(localStorage.getItem("mainTasks")) || []);
   const [tempTasks, setTempTasks] = useState(() => JSON.parse(localStorage.getItem("tempTasks")) || []);
-  const [habits, setHabits] = useState(() => JSON.parse(localStorage.getItem("habits")) || {
-    hpt: false, mpt: false, lpt: false, mr: false, er: false, nr: false
-  });
+  const [habits, setHabits] = useState(() =>
+    JSON.parse(localStorage.getItem("habits")) || {
+      hpt: false,
+      mpt: false,
+      lpt: false,
+      mr: false,
+      er: false,
+      nr: false,
+    }
+  );
 
   const [taskInput, setTaskInput] = useState("");
   const [taskType, setTaskType] = useState("HPT");
   const [tempInput, setTempInput] = useState("");
-  const [showCompleted, setShowCompleted] = useState(true);
-  const [mainIndex, setMainIndex] = useState(0);
-  const [tempIndex, setTempIndex] = useState(0);
 
   useEffect(() => localStorage.setItem("mainTasks", JSON.stringify(mainTasks)), [mainTasks]);
   useEffect(() => localStorage.setItem("tempTasks", JSON.stringify(tempTasks)), [tempTasks]);
@@ -22,51 +26,61 @@ export default function App() {
   const weights = { HPT: 1, MPT: 0.8, LPT: 0.6 };
   const tempWeight = 0.2;
 
+  const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
   const addMainTask = () => {
     if (!taskInput.trim()) return;
-    setMainTasks([...mainTasks, { text: taskInput.trim(), type: taskType, completed: false }]);
+    const newTask = {
+      id: generateId(),
+      text: taskInput.trim(),
+      type: taskType,
+      completed: false,
+    };
+    setMainTasks([...mainTasks, newTask]);
     setTaskInput("");
   };
 
   const addTempTask = () => {
     if (!tempInput.trim()) return;
-    setTempTasks([...tempTasks, { text: tempInput.trim(), completed: false }]);
+    const newTask = {
+      id: generateId(),
+      text: tempInput.trim(),
+      completed: false,
+    };
+    setTempTasks([...tempTasks, newTask]);
     setTempInput("");
   };
 
-  const toggleComplete = (index, section) => {
-    const tasks = section === "main" ? [...mainTasks] : [...tempTasks];
-    tasks[index].completed = !tasks[index].completed;
-    section === "main" ? setMainTasks(tasks) : setTempTasks(tasks);
+  const toggleComplete = (id, section) => {
+    const tasks = section === "main" ? mainTasks : tempTasks;
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, completed: true } : task
+    );
+    section === "main" ? setMainTasks(updatedTasks) : setTempTasks(updatedTasks);
   };
 
-  const deleteTask = (index, section) => {
-    const tasks = section === "main" ? [...mainTasks] : [...tempTasks];
-    tasks.splice(index, 1);
-    section === "main" ? setMainTasks(tasks) : setTempTasks(tasks);
-    if (section === "main" && mainIndex >= tasks.length) setMainIndex(Math.max(0, tasks.length - 1));
-    if (section === "temp" && tempIndex >= tasks.length) setTempIndex(Math.max(0, tasks.length - 1));
+  const deleteTask = (id, section) => {
+    const tasks = section === "main" ? mainTasks : tempTasks;
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    section === "main" ? setMainTasks(updatedTasks) : setTempTasks(updatedTasks);
   };
 
   const toggleHabit = (key) => setHabits({ ...habits, [key]: !habits[key] });
 
-  const mainScore = mainTasks.reduce((sum, t) => t.completed ? sum + (weights[t.type] || 0) : sum, 0);
-  const tempScore = tempTasks.reduce((sum, t) => t.completed ? sum + tempWeight : sum, 0);
+  const mainScore = mainTasks.reduce((sum, t) => (t.completed ? sum + (weights[t.type] || 0) : sum), 0);
+  const tempScore = tempTasks.reduce((sum, t) => (t.completed ? sum + tempWeight : sum), 0);
 
-  const renderSingleTask = (tasks, index, section) => {
-    if (tasks.length === 0) return <li>No tasks</li>;
-    const task = tasks[index];
-    if (!showCompleted && task.completed) return <li>Completed task hidden</li>;
+  const renderUncompletedTasks = (tasks, section) => {
+    const uncompletedTasks = tasks.filter((task) => !task.completed);
+    if (uncompletedTasks.length === 0) return <li>No active tasks</li>;
 
-    return (
-      <li className={task.completed ? "completed" : ""}>
-        <div className={`circle-checkbox ${task.completed ? "checked" : ""}`} onClick={() => toggleComplete(index, section)}></div>
-        <span className={task.completed ? "strike" : ""}>
-          {task.text} {section === "main" && `(${task.type})`}
-        </span>
-        <button className="del-btn" onClick={() => deleteTask(index, section)}>×</button>
+    return uncompletedTasks.map((task) => (
+      <li key={task.id}>
+        <div className="circle-checkbox" onClick={() => toggleComplete(task.id, section)}></div>
+        <span>{task.text} {section === "main" && `(${task.type})`}</span>
+        <button className="del-btn" onClick={() => deleteTask(task.id, section)}>×</button>
       </li>
-    );
+    ));
   };
 
   return (
@@ -82,7 +96,7 @@ export default function App() {
       {/* Execution Focus Section */}
       <div className="focus-banner">
         <h2>🎯 Today’s Focus</h2>
-        <p>{tempTasks[tempIndex]?.text || "No temp task yet"}</p>
+        <p>{tempTasks.find(t => !t.completed)?.text || "No temp task yet"}</p>
       </div>
 
       <div className="two-columns">
@@ -103,10 +117,7 @@ export default function App() {
             </select>
             <button onClick={addMainTask}>Add</button>
           </div>
-          <ul>{renderSingleTask(mainTasks, mainIndex, "main")}</ul>
-          {mainTasks.length > 1 && (
-            <button onClick={() => setMainIndex((mainIndex + 1) % mainTasks.length)}>Next Main</button>
-          )}
+          <ul>{renderUncompletedTasks(mainTasks, "main")}</ul>
         </div>
 
         {/* Right Column: Temp Tasks */}
@@ -121,10 +132,7 @@ export default function App() {
             />
             <button onClick={addTempTask}>Add</button>
           </div>
-          <ul>{renderSingleTask(tempTasks, tempIndex, "temp")}</ul>
-          {tempTasks.length > 1 && (
-            <button onClick={() => setTempIndex((tempIndex + 1) % tempTasks.length)}>Next Temp</button>
-          )}
+          <ul>{renderUncompletedTasks(tempTasks, "temp")}</ul>
         </div>
       </div>
 
@@ -143,10 +151,6 @@ export default function App() {
           ))}
         </ul>
       </div>
-
-      <button className="toggle-show" onClick={() => setShowCompleted(!showCompleted)}>
-        {showCompleted ? "Hide Completed" : "Show Completed"}
-      </button>
     </div>
   );
 }
