@@ -27,6 +27,10 @@ export default function App() {
   const tempWeight = 0.2;
 
   const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const clearScore=()=>{
+    setMainTasks([]);
+    setTempTasks([]);
+  }
 
   const addMainTask = () => {
     if (!taskInput.trim()) return;
@@ -150,6 +154,7 @@ export default function App() {
             </li>
           ))}
         </ul>
+        <button onClick={clearScore}>End of the day</button>
       </div>
     </div>
   );
